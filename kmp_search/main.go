@@ -7,12 +7,27 @@ func main() {
 		"ababc",
 		"aaaa",
 		"abababcdab",
+		"abcde",
+		"issip",
 	}
+	for _, x := range arr {
+		preRes := preCompute(x)
+		fmt.Println(x, " => ", preRes)
+		for i, pr := range preRes {
+			if pr == 0 {
+				continue
+			}
+			shows(x, i, pr)
+		}
+	}
+	fmt.Println("end of preCompute")
 
 	inputArr := []string{
 		"aaaababcde",
 		"aaabbbaaaabb",
 		"abc",
+		"abcdgabcdfabcdem",
+		"mississippi",
 	}
 	for i, input := range inputArr {
 		n := search(input, arr[i])
@@ -22,80 +37,26 @@ func main() {
 	}
 }
 
-func search(s string, needle string) int {
-	q := 0
-	qn := len(needle)
-	info := make([]int, qn)
-	/*
-		for i := 0; i < qn; i++ {
-			info[i] = qn - i - 1
-		}
-	*/
-	findQ(needle, qn, info)
-	fmt.Println("... s=", s, ", pat=", needle, "info=", info)
-	for p := 0; p < len(s); {
-		debugs(s, p)
-		debugs(needle, q)
-		fmt.Println("=====")
-		// fmt.Printf("p=%d[%c], q=%d[%c]\n", p, s[p], q, needle[q])
-
-		if s[p] == needle[q] {
-			p++
-			q++
-			if q >= qn {
-				// found first match
-				return p - qn
-			}
-			continue
-		}
-		// if not match
-		if q == 0 {
-			p++
-			continue
-		}
-
-		nextq := info[q-1]
-		if nextq > 0 {
-			p = p - q + 1 + nextq
-		} // else no need to go back
-		q = nextq
-	}
-	return -1
-}
-
-func findQ(s string, k int, res []int) {
-	// s[0 .. k-1]
-	if k < 2 {
-		return
-	}
-	q := k - 1
-	for ; q > 0; q-- {
-		i := 0
-		for ; i < q; i++ {
-			// fmt.Printf("k=%d, i=%d, q=%d, k-1-q+i=%d, left=<%c>, right=<%c>\n",
-			//	k, i, q, k-q+i, s[i], s[k-q+i])
-			if s[i] != s[k-q+i] {
-				break
-			}
-		}
-		if i == q {
-			// found
-			if q > res[k-1] {
-				res[k-1] = q
-			}
-			break
-		}
-	}
-
-	k--
-	if k >= 2 {
-		findQ(s, k, res)
-	}
-}
-
 func debugs(s string, k int) {
 	fmt.Println(s)
 	for i := 0; i < k; i++ {
+		fmt.Printf(" ")
+	}
+	fmt.Println("^")
+}
+
+func shows(s string, p, k int) {
+	fmt.Printf("shows, s=%s, p=%d, k=%d\n", s, p, k)
+	if k <= 0 {
+		return
+	}
+
+	for i := 0; i < k; i++ {
+		fmt.Printf(" ")
+	}
+	fmt.Println(s)
+	fmt.Println(s)
+	for i := 0; i < p; i++ {
 		fmt.Printf(" ")
 	}
 	fmt.Println("^")

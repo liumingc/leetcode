@@ -1,5 +1,6 @@
 package main
 
+/*
 import "fmt"
 
 func minimumJumps(forbidden []int, a int, b int, x int) int {
@@ -8,9 +9,12 @@ func minimumJumps(forbidden []int, a int, b int, x int) int {
 		forbMap[forbidden[i]] = true
 	}
 
+	jmps = make([]jmpInfo, 0)
+
 	fN := maxJumps(a, b, x)
 	fn := (x + a - 1) / a
 	fmt.Printf("maxJumps, fn=%d, fN=%d\n", fn, fN)
+	fmt.Println("jmps=", jmps)
 	for i := fn; i <= fN; i++ {
 		remain := i*a - x
 		if remain%b != 0 {
@@ -28,8 +32,8 @@ func minimumJumps(forbidden []int, a int, b int, x int) int {
 }
 
 func tryJump(forbMap []bool, fN, bN, a, b, x int) bool {
-	var trySolute func(curr int, fN, bN int, back bool) bool
-	trySolute = func(curr int, fN, bN int, back bool) (succ bool) {
+	var trySolute func(curr int, fN, bN int) bool
+	trySolute = func(curr int, fN, bN int) (succ bool) {
 		if curr <= 2000 && forbMap[curr] {
 			// fmt.Printf("forbid %d\n", curr)
 			return false
@@ -42,25 +46,21 @@ func tryJump(forbMap []bool, fN, bN, a, b, x int) bool {
 			return false
 		}
 
-		// try backward
-		if !back {
-			if bN > 0 && curr > b {
-				if trySolute(curr-b, fN, bN-1, true) {
-					return true
-				}
+		// try possible jmp, always forward, never goes back as a whole
+		for i := 0; i < len(jmps); i++ {
+			ji := jmps[i]
+			if fN < ji.fN || bN < ji.bN {
+				continue
 			}
-		}
-		// try forward
-		if fN > 0 && fN >= bN {
-			res := trySolute(curr+a, fN-1, bN, false)
-			if res {
+			// TODO: need to check if intermediate hits forbidden
+
+			if trySolute(curr+ji.c, fN-ji.fN, bN-ji.bN) {
 				return true
 			}
 		}
-
 		return false
 	}
-	return trySolute(a, fN-1, bN, false)
+	return trySolute(0, fN, bN)
 }
 
 func gcd(a, b int) int {
@@ -83,10 +83,12 @@ func maxJumps(a, b, x int) (fN int) {
 	if a > b {
 		c := a - b
 		n := (x + c - 1) / c
+		jmps = []jmpInfo{{c, 1, 1}, {a, 1, 0}}
 		return n
 	}
 	if a == b {
 		n := (x + a - 1) / a
+		jmps = []jmpInfo{{a, 1, 0}}
 		return n
 	}
 	k := gcd(b, a)
@@ -95,6 +97,9 @@ func maxJumps(a, b, x int) (fN int) {
 		m := i * b / a
 		c := a*(m+1) - i*b
 		n := (x + c - 1) / c
+		jmps = append(jmps, jmpInfo{
+			c, m + 1, i,
+		})
 		fmt.Printf("forw=%d, back=%d, c=%d\n", m+1, i, c)
 		tfN := (m + 1) * n
 		if tfN > fN {
@@ -103,3 +108,11 @@ func maxJumps(a, b, x int) (fN int) {
 	}
 	return fN
 }
+
+type jmpInfo struct {
+	c      int
+	fN, bN int
+}
+
+var jmps []jmpInfo
+*/

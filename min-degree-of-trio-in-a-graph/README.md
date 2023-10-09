@@ -1,0 +1,1 @@
+[leetcode:degree of trios in a graph](https://leetcode.cn/problems/minimum-degree-of-a-connected-trio-in-a-graph/solutions/2417898/yi-ge-tu-zhong-lian-tong-san-yuan-zu-de-wuv8o/?envType=daily-question&envId=2023-08-31)
